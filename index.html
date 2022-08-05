@@ -5,13 +5,225 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>DOM + Javascript</title>
+    <style>
+        body {
+            background-color: #333;
+            color: #f5f5f5;
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        /* #titulo .span {
+            color: red;
+        }
+
+        .button-enable{
+            background-color: green;
+            width: 150px;
+            height: 30px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .moveuMouse {
+            color: green
+        } */
+    </style>
 </head>
 
 <body>
+    <div id="conteudo">
+        <!-- aqui vai vários conteudos criados pelo javascript -->
+    </div>
+    <button id="adicionar">Adicionar Novo Elemento</button>
+
+    <script>
+
+        // 1 PASSO - capturar os elementos do HTML que serão modificados
+        // ou que adicionaremos eventos ouvintes (addEventListiner)
+        let conteudoHTML = document.getElementById('conteudo')
+        let botaoAdicionar = document.getElementById('adicionar')
+        
+        // variável que servirá para criar os id's dos novos registros
+        // ela é necessária para sabermos qual elemento será removido do HTML
+        let identificador = 1
 
 
-    <script src="./js/aula-26.07.2022.js"></script>
+        // adicionar o evento de click no botão capturado pelo js
+        // esse botão será responsável por criar os novos elementos html
+        // ao 'click' dispara a função chamada 'adicionarNovoElemento'
+        botaoAdicionar.addEventListener('click', adicionarNovoElemento)
+
+        // essa é a declaração da função que o botão irá executar
+        // dentro dela estará toda lógica necessária para criar um novo elemento no HTML
+        function adicionarNovoElemento(){
+            // createElement = criar um novo elemento HTML
+            // o elemento é sempre criado vazio, sem conteúdo ou atributos -> EX: <h1></h1>
+            let meuH1 = document.createElement('h1') // nesse momento, criamos isso -> <h1></h1> 
+
+            // innerHTML -> colocar conteudo dentro do elemento
+            // o innerHTML é usado para interpretar os elementos HTML que colocarmos como conteúdo -> EX: <h1>Conteudo bla bla bla <span>Teste</span></h1>
+            // innerText -> Colocar apenas TEXTO no conteúdo do elemento. Considera as tags como texto -> <h1>Conteudo bla bla bla Teste</h1>
+            meuH1.innerHTML = 'Conteudo bla bla bla <span style="color: blue">Teste</span>'
+
+
+            // setAttribute -> adiciono um atributo novo ao elemento -> Ex: <h1 style="valor">Conteudo</h1>
+            meuH1.setAttribute('style', 'font-family: sans-serif; color: red;')
+            
+            // adiciono o atributo id no elemento criado -> EX: <h1 id="1">Conteudo</h1>
+            // a variavel "identificador" (que é numérica) precisa ser convertida para string
+            // para poder ser adicionada como valor do id no setAttribute('atributo', 'valor')
+            meuH1.setAttribute('id', `${identificador}`)
+
+            // elementoPai.appendChild(h1) -> aqui mostra no HTML
+            // appendChild() é a função responsável por adicionar um novo elemento filho
+            // em um elemento pai já existente - O elemento pai já deve estar criado para receber um elemento filho
+            // neste caso estamos adicionando um h1 na div que está inicialmente vazia no HTML
+            conteudoHTML.appendChild(meuH1)
+            
+
+            // aqui adicionamos um ouvinte de eventos (click) no elemento h1 criado
+            // quando este elemento for clicado ele dispara a função anonima responsável por chamar
+            // a função "remover()" que recebe como parametro o id do elemento que será removido do HTML
+            meuH1.addEventListener('click', () => {
+                console.log(meuH1.id) // olhe no console o valor mostrado do id que será removido
+                remover(meuH1.id)
+            })
+
+            // ao final de todo processo, incrementamos a variavel global "identificador"
+            // para que o proximo elemento criado (h1) tenha um id diferente
+            identificador++
+            
+        }
+
+        // esta é a declaração da função de remover um elemento do HTML
+        // que recebe como parametro aquele id enviado e executa a lógica necessária
+        // para remoção de um elemento específico do html
+        // ou seja, daquele elemento (h1) que foi clicado 
+        function remover(identificador){
+            
+            // aqui retorna todos os h1 do html
+            let listaH1s = document.querySelectorAll('h1')
+
+            // aqui percorre todos os elementos h1 do HTML capturados com o querySelectorAll
+            // só é possível percorrer uma lista de elementos HTML utilizando o "for of"
+            for (const h1 of listaH1s) { // para cada h1 dentro da listaH1s, vai executar a verificação
+                
+                // verifica se aquele h1 que está sendo percorrido possui o atributo id
+                // igual ao que a função recebeu por parametro
+                // se o resultado da verificação for TRUE vai executar o que está dentro do IF
+                if (h1.id === identificador) {
+
+                    // aqui executamos o comando de remover um elemento filho da div 
+                    // precisamos dizer para ela qual elemento remover
+                    // no caso, iremos remover aquele elemento que atender à condição do IF
+                    conteudoHTML.removeChild(h1)
+                }
+            }
+        }
+
+
+
+
+
+
+        // buscando um único elemento no html / DOM
+        // getElementById -> capturar elemento pelo seu identificador
+        //let tituloHTML = document.getElementById('titulo')
+        //let buttonHTML = document.getElementById('button')
+
+        // onclick - clique do mouse
+        // adicionando atributo do evento
+        //tituloHTML.setAttribute('onmouseenter', 'mouseEnter()')
+        //tituloHTML.setAttribute('onmouseleave', 'mouseLeave()')
+
+        // listeners -> são eventos que ouvem e executam uma série de funções assim que o usuário fizer algo com aquele determinado elemento
+        /* 
+        
+        tituloHTML.addEventListener('mouseenter', mouseEnter)
+        tituloHTML.addEventListener('mouseleave', mouseLeave)
+        buttonHTML.addEventListener('click', mostraAlerta)
+        document.addEventListener('DOMContentLoaded', aoCarregar)
+
+        function mouseEnter(){
+            buttonHTML.classList.add('button-enable')  
+        }
+
+        function mouseLeave(){
+            buttonHTML.classList.remove('button-enable') 
+        }
+
+        function mostraAlerta(){
+            alert("Clicou!")
+        }
+
+        function aoCarregar(valor){
+            let body = document.querySelector('body')
+            body.setAttribute('style', 'background-color: blue')
+
+            body.addEventListener('mousemove', (valor) => {
+                moveuMouse(valor)
+            })
+        }
+
+        function moveuMouse(){
+            tituloHTML.classList.toggle('moveuMouse')
+        } 
+        
+        */
+
+
+
+
+
+        
+
+    // CAPTURA DO ELEMENTO QUE QUEREMOS MODIFICAR OU TORNAR DINÂMICO
+    // SERVE PARA CAPTURAR UM UNICO ELEMENTO NA DOM
+    // document.getElementById
+    //let tituloHTML = window.document.getElementById('titulo')
+    //tituloHTML.innerHTML = '<h3>Titulo modificado</h3>'
+    
+    //querySelector
+    // querySelector -> capturar um elemento pelo seu seletor css ( # -> id ) (. -> class) ( > -> filho direto )
+    //let tituloHTML = document.querySelector('#titulo')
+    //console.log(tituloHTML)
+
+    /*  tituloHTML.className += ' teste-classe'
+        console.log(tituloHTML.className)
+        tituloHTML.style = 'background: white' */
+
+        
+    /*
+            
+        let nome = document.getElementById('nome')
+        nome.innerHTML = 'João da Silva'
+
+    */
+
+    // let nomeHTML = document.getElementById('nome');
+
+    // capturar um atributo - getAttribute - get -> buscar/pegar
+    //console.log(nomeHTML.getAttribute('id'))
+
+    // modificar ou adicionar um atributo - setAttribute - set -> criar/adicionar
+    //nomeHTML.setAttribute('style', 'color: red')
+    //nomeHTML.setAttribute('onclick', 'clicou()')
+    /* 
+    function clicou() {
+        alert("Clicou!") 
+        
+    }
+    */
+        
+
+        // CAPTURAR MAIS DE UM ELEMENTO DO HTML
+        // todos os métodos que possuem notação no plural
+        // Ex: querySelectorAll, getElementsByTagName, getElementsByName, getElementsByClassName etc
+
+
+    </script>
 </body>
 
 </html>
