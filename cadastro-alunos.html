@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Alunos</title>
+    <style>
+        fieldset{
+            border-radius: 10px;
+            border-color: grey;
+            box-shadow: 5px 5px 10px black;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="formulario">
+        <fieldset>
+            <legend>Dados Pessoais</legend>
+
+            <div style="margin: 10px">
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" id="nome" required>
+            </div>
+            
+            <div style="margin: 10px">
+                <label for="idade">Idade:</label>
+                <input type="number" name="idade" id="idade" required>
+            </div>
+            
+            <div style="margin: 10px">
+                <label for="cpf">CPF:</label>
+                <input type="text" name="cpf" id="cpf" required>
+            </div>
+            
+            <div style="margin: 10px">
+                <label for="rua">Rua:</label>
+                <input type="text" name="rua" id="rua">
+            </div>
+            
+            <div style="margin: 10px">
+                <label for="numero">Número:</label>
+                <input type="number" name="numero" id="numero">
+            </div>
+            
+            <div style="margin: 10px">
+                <label for="bairro">Bairro:</label>
+                <input type="text" name="bairro" id="bairro">
+            </div>
+            
+            <div style="margin: 10px">
+                <label for="cidade">Cidade:</label>
+                <input type="text" name="cidade" id="cidade">
+            </div>
+            
+            <div style="margin: 10px">
+                <label for="estado">Estado: </label>
+                <select name="estado" id="estado" required>
+                    <option disabled selected value="">-Selecione-</option>
+                    <option value="AC">Acre</option>
+                    <option value="AL">Alagoas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceara</option>
+                    <option value="DF">Distrito Federal</option>
+                    <option value="ES">Espírito Santo</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="PA">Pará</option>
+                    <option value="PB">Paraíba</option>
+                    <option value="PR">Paraná</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="PI">Piauí</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="RN">Rio Grande do Norte</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="RO">Rondônia</option>
+                    <option value="RR">Roraima</option>
+                    <option value="SC">Santa Catarina</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="SE">Sergipe</option>
+                    <option value="TO">Tocantins</option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Formação</legend>
+
+           <div>
+                <label for="escolaridade">Escolaridade: </label>
+                <input type="radio" name="escolaridade" id="EM" value="Ensino Médio">
+                <label for="EM">Ensino Médio</label>
+                <input type="radio" name="escolaridade" id="ES" value="Ensino Superior" >
+                <label for="ES">Ensino Superior</label>
+                <input type="radio" name="escolaridade" id="ET" value="Ensino Técnico" >
+                <label for="ET">Ensino Técnico</label>
+           </div>
+
+            <div>
+                <label for="interesse">Áreas de Interesse</label>
+                <input type="checkbox" value="Exatas" id="exatas" name='interesse' >
+                <label for="exatas">Exatas</label>
+                <input type="checkbox" value="Humanas" id="humanas" name='interesse' >
+                <label for="humanas">Humanas</label>
+                <input type="checkbox" value="Nenhuma" id="nenhuma" name='interesse' >
+                <label for="nenhuma">Nenhuma</label>
+            </div>
+        </fieldset>
+
+        <input type="submit" value="Salvar">
+    </form>
+
+    <script>
+        
+        // captura o elmento do formulário pelo js para adicionar o evento de listener
+        let formularioHTML = document.getElementById('formulario');
+        
+
+        // para manter as validações do formulário (required etc) o evento será do tipo submit
+        formularioHTML.addEventListener('submit', (evento) => {
+            
+            // esse parametro e função serve para remover o comportamento padrão do evento submit
+            // sem isso, ao clicar no botão salvar a página será recarregada e os dados  a serem salvos serão perdidos
+            evento.preventDefault();
+
+            // captura os inputs para termos acesso ao valor digitado pelo usuário
+            let nomeHTML = document.getElementById('nome');
+            let idadeHTML = document.getElementById('idade');
+            let cpfHTML = document.getElementById('cpf');
+            let ruaHTML = document.getElementById('rua'); // esse é opcional
+            let numeroHTML = document.getElementById('numero'); // esse é opcional
+            let bairroHTML = document.getElementById('bairro'); // esse é opcional
+            let cidadeHTML = document.getElementById('cidade'); // esse é opcional
+            let estadoHTML = document.querySelector('#estado');
+            let escolaridadeHTML = document.querySelector('input[name="escolaridade"]:checked'); //input[name="type-input"]:checked
+            let areaInteresseHTML = document.querySelectorAll('input[name="interesse"]:checked');
+            
+            
+            console.log(nomeHTML.value)
+            console.log(idadeHTML.value)
+            console.log(cpfHTML.value)
+            console.log(ruaHTML?.value) // por ser opcional, utilizamos o operador "?." (elvis) para dizer pro js que se não tiver .value ele ignora aquela requisição 
+            console.log(numeroHTML?.value) // mesma coisa aqui - https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+            console.log(bairroHTML?.value) // mesma coisa aqui
+            console.log(cidadeHTML?.value) // mesma coisa aqui
+            console.log(estadoHTML.value) 
+            console.log(escolaridadeHTML.value) // esse cara precisa validar com js se foi preenchido
+            console.log(areaInteresseHTML) // esse cara precisa validar com js se foi preenchido também
+        })
+
+    </script>
+</body>
+    
+
+</html>

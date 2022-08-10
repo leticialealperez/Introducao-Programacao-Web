@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios HTML</title>
+</head>
+<body>
+    
+    <form>
+        <!-- input 1 - text -->
+        <label for="nome">Nome</label>
+        <input id="nome" type="text" minlength="2" placeholder="Ex: João da Silva" required>
+        <br>
+        <!-- input 2 - number -->
+        <label for="idade">Idade</label>
+        <input id="idade" type="number" min="18" max="70" placeholder="Idade" required value="20">
+    </form>
+
+    
+    
+    <!-- input 3 - email -->
+    <input type="email" placeholder="E-mail" required value="teste@teste.com">
+    
+    <!-- input 4 - password -->
+    <input type="password" >
+
+    <br>
+    <!-- input 5 - checkbox -->
+    <span>Tipo de alguma coisa:</span>
+    
+    <input type="checkbox" id="checkbox-1" name="quantidade" value="Dev">
+    <label for="checkbox-1">Dev</label>
+
+    
+    <input type="checkbox" id="checkbox-2" name="quantidade" value="QA">
+    <label for="checkbox-2">QA</label>
+
+    
+    <input type="checkbox" id="checkbox-3" name="quantidade" value="UX/UI">
+    <label for="checkbox-3">UX/UI</label>
+
+    <br>
+
+    <!-- input 5 -radiobutton -->
+    <span>Forma de pagamento:</span>
+    <input type="radio" id="radio-1" name="pagamento" value="AV" checked>
+    <label for="radio-1">a vista</label>
+    
+    
+    <input type="radio" id="radio-2" name="pagamento" value="EMP">
+    <label for="radio-2">empréstimo</label>
+    
+    
+    <input type="radio" id="radio-3" name="pagamento" value="CRED">
+    <label for="radio-3">crédito</label>
+
+    <br>
+    <!-- input 6 -color -->
+    <label for="color" >Escolha uma cor:</label>
+    <input type="color" id="color" value="#472270">
+
+
+    <br>
+    <!-- input 7 -date/datetime-local -->
+    <label for="data-nascimento">Escolha uma data:</label>
+    <input type="datetime-local" id="data-nascimento">
+
+
+    <br>
+    <!-- input 7 -hidden -->
+    
+    <p>
+        Teste Input oculto
+        <input type="hidden" id="oculto">
+    </p>
+
+
+    <br>
+    <!-- input 7 - file -->
+    <label for="arquivo-anexo">Escolha um arquivo:</label>
+    <input type="file" id="arquivo-anexo">
+
+</body>
+</html>
