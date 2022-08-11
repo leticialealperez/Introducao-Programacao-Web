@@ -103,7 +103,7 @@
 
             <div>
                 <label for="interesse">Áreas de Interesse</label>
-                <input type="checkbox" value="Exatas" id="exatas" name='interesse' >
+                <input type="checkbox" value="Exatas" id="exatas" name='interesse'>
                 <label for="exatas">Exatas</label>
                 <input type="checkbox" value="Humanas" id="humanas" name='interesse' >
                 <label for="humanas">Humanas</label>
@@ -114,11 +114,16 @@
 
         <input type="submit" value="Salvar">
     </form>
+    <div id="registros">
+        <!-- aqui dentro vai ser criado os elementos dinamicamente -->
+    </div>
 
     <script>
-        
+                    
         // captura o elmento do formulário pelo js para adicionar o evento de listener
+        let registrosHTML = document.getElementById('registros');
         let formularioHTML = document.getElementById('formulario');
+        let dados = [];
         
 
         // para manter as validações do formulário (required etc) o evento será do tipo submit
@@ -139,8 +144,101 @@
             let estadoHTML = document.querySelector('#estado');
             let escolaridadeHTML = document.querySelector('input[name="escolaridade"]:checked'); //input[name="type-input"]:checked
             let areaInteresseHTML = document.querySelectorAll('input[name="interesse"]:checked');
+            let areaInteresseAux = [];
             
+            areaInteresseHTML.forEach((valor, index, array) => areaInteresseAux.push(valor.value));
+            console.log(areaInteresseAux);
+
+            const retorno = validarCampos(escolaridadeHTML, areaInteresseHTML);
+
+            if(retorno){
+                const pessoa = {
+                    nome: nomeHTML.value,
+                    idade: Number(idadeHTML.value),
+                    cpf: cpfHTML.value,
+                    rua: ruaHTML.value ? ruaHTML.value : 'Não informado',
+                    numero: numeroHTML.value ? Number(numeroHTML.value) : 'Não informado',
+                    bairro: bairroHTML.value ? bairroHTML.value : 'Não informado',
+                    cidade: cidadeHTML.value ? cidadeHTML.value :  'Não informado',
+                    estado: estadoHTML.value,
+                    escolaridade: escolaridadeHTML.value,
+                    areaInteresse: areaInteresseAux
+                }
+
+                let existe = dados.some((valor) => valor.cpf === cpfHTML.value)
+
+                if(existe){
+                    alert("Já existe esse CPF cadastrado.")
+                    return
+                }
+
+                // armazenamento dos dados válidos e com CPF único garantido!
+                dados.push(pessoa)
+                montarHTML(pessoa)
+            }
             
+        });
+
+        function validarCampos(escolaridade, areaInteresse){
+            
+            if(!escolaridade){ // undefined ou null -> true 
+                alert("Você deve selecionar a sua escolaridade.")
+                return false
+            }
+
+            if(areaInteresse.length === 0){
+                alert("Selecione ao menos 1 área de interesse.")
+                return false
+            }
+
+            return true
+        }
+
+        function montarHTML(pessoaCadastrada){
+            const section = document.createElement('section'); // <section></section>
+            const pNome = document.createElement('p');
+            const pIdade = document.createElement('p');
+            const pCpf = document.createElement('p');
+            const pRua = document.createElement('p');
+            const pNumero = document.createElement('p');
+            const pBairro = document.createElement('p');
+            const pCidade = document.createElement('p');
+            const pEstado = document.createElement('p');
+            const pEscolaridade = document.createElement('p');
+            const pAreaInteresse = document.createElement('p');
+
+            section.appendChild(pNome);
+            section.appendChild(pIdade);
+            section.appendChild(pCpf);
+            section.appendChild(pEscolaridade);
+            section.appendChild(pRua);
+            section.appendChild(pNumero);
+            section.appendChild(pBairro);
+            section.appendChild(pCidade);
+            section.appendChild(pEstado);
+            section.appendChild(pAreaInteresse);
+            registrosHTML.appendChild(section);
+
+
+            //<section> -> cada section vai armazenar as infos da pessoa criada
+            //    <p>Nome</p>
+            //    <p>Idade</p>
+            //    <p>CPF</p>
+            //    <p>Escolaridade</p>
+            //    <p></p>
+            //    <p></p>
+            //    <p></p>
+            //</section>
+
+
+
+
+        }
+
+
+
+        /*
+        
             console.log(nomeHTML.value)
             console.log(idadeHTML.value)
             console.log(cpfHTML.value)
@@ -149,9 +247,10 @@
             console.log(bairroHTML?.value) // mesma coisa aqui
             console.log(cidadeHTML?.value) // mesma coisa aqui
             console.log(estadoHTML.value) 
-            console.log(escolaridadeHTML.value) // esse cara precisa validar com js se foi preenchido
+            console.log(escolaridadeHTML?.value) // esse cara precisa validar com js se foi preenchido
             console.log(areaInteresseHTML) // esse cara precisa validar com js se foi preenchido também
-        })
+        
+        */
 
     </script>
 </body>
