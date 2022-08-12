@@ -12,6 +12,15 @@
             box-shadow: 5px 5px 10px black;
             margin-top: 10px;
         }
+
+        .registro{
+            border: 1px solid black;
+            padding: 20px;
+        }
+
+        span{
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -114,6 +123,7 @@
 
         <input type="submit" value="Salvar">
     </form>
+    <hr>
     <div id="registros">
         <!-- aqui dentro vai ser criado os elementos dinamicamente -->
     </div>
@@ -123,7 +133,15 @@
         // captura o elmento do formulário pelo js para adicionar o evento de listener
         let registrosHTML = document.getElementById('registros');
         let formularioHTML = document.getElementById('formulario');
-        let dados = [];
+        let dados = buscarDadosStorage(); // []
+
+        document.addEventListener('DOMContentLoaded', () => {
+            /* for(const registro of dados){
+                montarHTML(registro);
+            } */
+
+            dados.forEach((registro) => montarHTML(registro));
+        })
         
 
         // para manter as validações do formulário (required etc) o evento será do tipo submit
@@ -146,9 +164,8 @@
             let areaInteresseHTML = document.querySelectorAll('input[name="interesse"]:checked');
             let areaInteresseAux = [];
             
-            areaInteresseHTML.forEach((valor, index, array) => areaInteresseAux.push(valor.value));
-            console.log(areaInteresseAux);
-
+            areaInteresseHTML.forEach((valor, index, array) => areaInteresseAux.push(valor.value)); //input value="Humanas"
+            
             const retorno = validarCampos(escolaridadeHTML, areaInteresseHTML);
 
             if(retorno){
@@ -162,10 +179,10 @@
                     cidade: cidadeHTML.value ? cidadeHTML.value :  'Não informado',
                     estado: estadoHTML.value,
                     escolaridade: escolaridadeHTML.value,
-                    areaInteresse: areaInteresseAux
+                    areaInteresse: areaInteresseAux // => ['Humanas', 'Exatas']
                 }
 
-                let existe = dados.some((valor) => valor.cpf === cpfHTML.value)
+                let existe = dados.some((valor) => valor.cpf === cpfHTML.value) // retorna true ou false 
 
                 if(existe){
                     alert("Já existe esse CPF cadastrado.")
@@ -175,10 +192,12 @@
                 // armazenamento dos dados válidos e com CPF único garantido!
                 dados.push(pessoa)
                 montarHTML(pessoa)
+                salvarDadosStorage(dados);
+
             }
             
-        });
-
+        }); 
+        
         function validarCampos(escolaridade, areaInteresse){
             
             if(!escolaridade){ // undefined ou null -> true 
@@ -194,18 +213,47 @@
             return true
         }
 
-        function montarHTML(pessoaCadastrada){
+        function montarHTML(registro){
             const section = document.createElement('section'); // <section></section>
-            const pNome = document.createElement('p');
-            const pIdade = document.createElement('p');
-            const pCpf = document.createElement('p');
-            const pRua = document.createElement('p');
-            const pNumero = document.createElement('p');
-            const pBairro = document.createElement('p');
-            const pCidade = document.createElement('p');
-            const pEstado = document.createElement('p');
-            const pEscolaridade = document.createElement('p');
-            const pAreaInteresse = document.createElement('p');
+            section.setAttribute('id', registro.cpf);
+            section.classList.add('registro');
+
+            const pNome = document.createElement('p'); // <p></p>
+            pNome.innerHTML = `Nome: <span>${registro.nome}</span>`;
+
+            const pIdade = document.createElement('p'); // <p></p>
+            pIdade.innerHTML = `Idade: <span>${registro.idade}</span>`;
+
+            const pCpf = document.createElement('p'); // <p></p>
+            pCpf.innerHTML = `CPF: <span>${registro.cpf}</span>`; 
+
+            const pRua = document.createElement('p'); // <p></p>
+            pRua.innerHTML = `Rua: <span>${registro.rua}</span>`;
+
+            const pNumero = document.createElement('p'); // <p></p>
+            pNumero.innerHTML = `Numero: <span>${registro.numero}</span>`;
+
+
+            const pBairro = document.createElement('p'); // <p></p>
+            pBairro.innerHTML = `Bairro: <span>${registro.bairro}</span>`;
+
+            const pCidade = document.createElement('p'); // <p></p>
+            pCidade.innerHTML = `Cidade: <span>${registro.cidade}</span>`;
+
+            const pEstado = document.createElement('p'); // <p></p>
+            pEstado.innerHTML = `Estado: <span>${registro.estado}</span>`;
+
+            const pEscolaridade = document.createElement('p'); // <p></p>
+            pEscolaridade.innerHTML = `Escolaridade: <span>${registro.escolaridade}</span>`;
+
+            //    [ Exatas, Humanas, Nenhum ]    =>  Exatas, Nenhum, Humanas
+            let manipulado = registro.areaInteresse.reduce((acc, prox) => {
+                return acc + ', ' + prox
+            });
+
+            const pAreaInteresse = document.createElement('p'); // <p></p>
+            pAreaInteresse.innerHTML = `Area de Interesse: <span>${manipulado}</span>`; // [ Exatas, Humanas ]
+
 
             section.appendChild(pNome);
             section.appendChild(pIdade);
@@ -219,23 +267,35 @@
             section.appendChild(pAreaInteresse);
             registrosHTML.appendChild(section);
 
+        }
 
-            //<section> -> cada section vai armazenar as infos da pessoa criada
-            //    <p>Nome</p>
-            //    <p>Idade</p>
-            //    <p>CPF</p>
-            //    <p>Escolaridade</p>
-            //    <p></p>
-            //    <p></p>
-            //    <p></p>
-            //</section>
-
-
-
-
+        function salvarDadosStorage(dados){
+            localStorage.setItem('cadastros', JSON.stringify(dados))
         }
 
 
+        function buscarDadosStorage(){
+            let dadosString = localStorage.getItem('cadastros') || []
+            let dadosTransformados = JSON.parse(dadosString)
+            
+            return dadosTransformados  // pode ser assim =>  JSON.parse(localStorage.getItem('cadastros'))
+        }
+        // JSON.parse  => transforma o formato JSON (tudo stringuifado para o formato padrão) "[{}]" => [{}]
+        // JSON.stringify => [{}] => transforma para string => "[{}]"
+
+        // COMO GRAVAR INFORMAÇÕES NO LOCALSTORAGE? setItem => criar um registro => localStorage.setItem()
+        //localStorage.setItem()
+
+
+        // COMO QUE EU BUSCO UM REGISTRO DO LOCALSTORAGE? getItem => localStorage.getItem()
+
+        // COMO REMOVO 1 (APENAS 1) REGISTRO DO LOCALSTORAGE? removeItem() => localStorage.removeItem()
+
+
+        // COMO REMOVO TODOS OS REGISTROS DO LOCALSTORAGE? clear() => localStorage.clear()
+
+        
+        
 
         /*
         
