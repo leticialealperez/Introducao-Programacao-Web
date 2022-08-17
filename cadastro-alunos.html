@@ -21,6 +21,28 @@
         span{
             color: green;
         }
+
+        .button-editar {
+            width: 100px;
+            height: 30px;
+            background-color: green;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            color: white;
+            margin: 10px;
+        }
+
+        .button-apagar {
+            width: 100px;
+            height: 30px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 10px;
+        }
     </style>
 </head>
 <body>
@@ -133,7 +155,7 @@
         // captura o elmento do formulário pelo js para adicionar o evento de listener
         let registrosHTML = document.getElementById('registros');
         let formularioHTML = document.getElementById('formulario');
-        let dados = buscarDadosStorage(); // []
+        let dados = buscarDadosStorage();
 
         document.addEventListener('DOMContentLoaded', () => {
             /* for(const registro of dados){
@@ -173,10 +195,10 @@
                     nome: nomeHTML.value,
                     idade: Number(idadeHTML.value),
                     cpf: cpfHTML.value,
-                    rua: ruaHTML.value ? ruaHTML.value : 'Não informado',
-                    numero: numeroHTML.value ? Number(numeroHTML.value) : 'Não informado',
-                    bairro: bairroHTML.value ? bairroHTML.value : 'Não informado',
-                    cidade: cidadeHTML.value ? cidadeHTML.value :  'Não informado',
+                    rua: ruaHTML.value ?? 'Não informado',
+                    numero: Number(numeroHTML.value) ?? 'Não informado',
+                    bairro: bairroHTML.value ?? 'Não informado',
+                    cidade: cidadeHTML.value ?? 'Não informado',
                     estado: estadoHTML.value,
                     escolaridade: escolaridadeHTML.value,
                     areaInteresse: areaInteresseAux // => ['Humanas', 'Exatas']
@@ -190,7 +212,7 @@
                 }
 
                 // armazenamento dos dados válidos e com CPF único garantido!
-                dados.push(pessoa)
+                dados.push(pessoa) // array local => data = []
                 montarHTML(pessoa)
                 salvarDadosStorage(dados);
 
@@ -233,7 +255,6 @@
             const pNumero = document.createElement('p'); // <p></p>
             pNumero.innerHTML = `Numero: <span>${registro.numero}</span>`;
 
-
             const pBairro = document.createElement('p'); // <p></p>
             pBairro.innerHTML = `Bairro: <span>${registro.bairro}</span>`;
 
@@ -246,7 +267,21 @@
             const pEscolaridade = document.createElement('p'); // <p></p>
             pEscolaridade.innerHTML = `Escolaridade: <span>${registro.escolaridade}</span>`;
 
-            //    [ Exatas, Humanas, Nenhum ]    =>  Exatas, Nenhum, Humanas
+            const buttonExcluir = document.createElement('button');
+            buttonExcluir.setAttribute('class', 'button-apagar');
+            buttonExcluir.innerText = 'Apagar';
+            buttonExcluir.addEventListener('click', () => {
+                apagar(registro.cpf);
+            })
+
+            const buttonEditar = document.createElement('button');
+            buttonEditar.setAttribute('class', 'button-editar');
+            buttonEditar.innerText = 'Editar';
+            buttonEditar.addEventListener('click', () => {
+                editar(registro);
+            })
+
+            //    [ Exatas, Humanas, Nenhum ]    =>  'Exatas, Nenhum, Humanas'
             let manipulado = registro.areaInteresse.reduce((acc, prox) => {
                 return acc + ', ' + prox
             });
@@ -265,21 +300,48 @@
             section.appendChild(pCidade);
             section.appendChild(pEstado);
             section.appendChild(pAreaInteresse);
+            section.appendChild(buttonEditar);
+            section.appendChild(buttonExcluir);
             registrosHTML.appendChild(section);
 
         }
 
         function salvarDadosStorage(dados){
             localStorage.setItem('cadastros', JSON.stringify(dados))
+            // criar => setItem('chave', 'valor')
         }
 
 
         function buscarDadosStorage(){
-            let dadosString = localStorage.getItem('cadastros') || []
-            let dadosTransformados = JSON.parse(dadosString)
+            /* let dadosString = localStorage.getItem('cadastros') ?? []
+            let dadosTransformados = JSON.parse(dadosString) */
             
-            return dadosTransformados  // pode ser assim =>  JSON.parse(localStorage.getItem('cadastros'))
+            return JSON.parse(localStorage.getItem('cadastros') ?? '[]') // pode ser assim =>  JSON.parse(localStorage.getItem('cadastros'))
         }
+
+        function apagar(cpf){
+            const dados = buscarDadosStorage();
+            const indiceEncontrado = dados.findIndex((valor) => valor.cpf === cpf)
+
+
+            const registros = document.querySelectorAll('.registro') // sections que tiverem a classe registro
+
+            for(const section of registros){
+
+                if(section.id === cpf){
+                    registrosHTML.removeChild(section)
+                    dados.splice(indiceEncontrado, 1)
+                }
+            }
+
+            salvarDadosStorage(dados);
+            
+        }
+
+        function editar(pessoaCadastrada){
+            console.log(pessoaCadastrada);
+        }
+        
         // JSON.parse  => transforma o formato JSON (tudo stringuifado para o formato padrão) "[{}]" => [{}]
         // JSON.stringify => [{}] => transforma para string => "[{}]"
 
